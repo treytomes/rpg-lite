@@ -34,12 +34,41 @@ display(DisplayType.SPRITE).mode = displayMode.sprite
 disp = display(4)
 disp.clear
 
-player0Image = file.loadImage("assets/DawnLike/Characters/Player0.png")
-player1Image = file.loadImage("assets/DawnLike/Characters/Player1.png")
+SpriteSheet = {}
+SpriteSheet.init = function(imagePath)
+    self.imagePath = imagePath
+    self.image = file.loadImage(self.imagePath)
+end function
+
+SpriteSheet.make = function(imagePath)
+    ss = new SpriteSheet
+    ss.init imagePath
+    return ss
+end function
+
+SpriteSheet.get = function(x, y)
+    // tilesPerRow = SPRITESHEET_WIDTH / SPRITE_WIDTH
+    sheetX = x * SPRITE_WIDTH
+    sheetY = SPRITESHEET_HEIGHT - SPRITE_HEIGHT * (y + 1)
+    return self.image.getImage(sheetX, sheetY, SPRITE_WIDTH, SPRITE_HEIGHT)
+end function
+
+Player = {}
+Player.init = function()
+end function
+
+Player.make = function()
+    p = new Player
+    p.init
+    return p
+end function
+
+player0Sprites = SpriteSheet.make("assets/DawnLike/Characters/Player0.png")
+player1Sprites = SpriteSheet.make("assets/DawnLike/Characters/Player1.png")
 
 playerImages = spriteControllers.newAnimation([
-    player0Image.getImage(0, SPRITESHEET_HEIGHT - SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT),
-    player1Image.getImage(0, SPRITESHEET_HEIGHT - SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT),
+    player0Sprites.get(0, 0),
+    player1Sprites.get(0, 0),
 ])
 playerImages.speed = 0.5
 playerAnimationFrame = 0
@@ -47,7 +76,6 @@ playerSpeed = 4
 
 playerSprite = new spriteControllers.Animated
 
-// playerSprite.image = playerImages[playerAnimationFrame]
 playerSprite.scale = SPRITE_SCALE
 
 playerSprite.play playerImages
