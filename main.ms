@@ -1,17 +1,13 @@
 import "qa"
+import "spriteControllers"
 import "stringUtil"
-
-// Display 0: qa
-// Display 1: ui
-// Display 2: sprites
-// Display 3: tiles
 
 DisplayType = {
     "QA": 0, // pre-defined
     "UI": 1,
     "SPRITE": 4, // pre-defined
     "TILE": 6,
-    "SOLID": 7,
+    "SOLID": 7, // pre-defined
 }
 
 Key = {
@@ -19,6 +15,7 @@ Key = {
     "DOWN": 20,
     "LEFT": 17,
     "RIGHT": 18,
+    "EXIT": 27,
 }
 
 SPRITE_WIDTH = 16
@@ -40,51 +37,53 @@ disp.clear
 player0Image = file.loadImage("assets/DawnLike/Characters/Player0.png")
 player1Image = file.loadImage("assets/DawnLike/Characters/Player1.png")
 
-playerImages = [
+playerImages = spriteControllers.newAnimation([
     player0Image.getImage(0, SPRITESHEET_HEIGHT - SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT),
     player1Image.getImage(0, SPRITESHEET_HEIGHT - SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT),
-]
+])
+playerImages.speed = 0.5
 playerAnimationFrame = 0
 playerSpeed = 4
 
-playerSprite = new Sprite
-playerSprite.image = playerImages[playerAnimationFrame]
+playerSprite = new spriteControllers.Animated
+
+// playerSprite.image = playerImages[playerAnimationFrame]
 playerSprite.scale = SPRITE_SCALE
+
+playerSprite.play playerImages
+
 playerSprite.x = 480
 playerSprite.y = 320
 disp.sprites.push playerSprite
 
 lastAnimationTime = time
-// angle = 0
-while true
-    // spr.rotation = angle
-    // angle += 1
+isDone = false
+lastFrameTime = time
+while not isDone
+    deltaTime = time - lastFrameTime
+    lastFrameTime = time
 
-    // if key.available then
-    //     k = key.get
-    //     print "k: {0} {1}".fill([k, code(k)])
-    //     k = code(k)
-    //     if k == Key.UP then
-    //         spr.y += 1
-    //     else if k == Key.DOWN then
-    //         spr.y -= 1
-    //     else if k == Key.LEFT then
-    //         spr.x -= 1
-    //     else if k == Key.RIGHT then
-    //         spr.x += 1
-    //     end if
-    // end if
+    if key.available then
+        k = key.get
+        // print "k: {0} {1}".fill([k, code(k)])
+        k = code(k)
+        if k == Key.EXIT then isDone = true
+    end if
 
     playerSprite.x += key.axis("Horizontal") * playerSpeed
 	playerSprite.y += key.axis("Vertical") * playerSpeed
 
-    if time - lastAnimationTime >= ANIMATION_SPEED then
-        lastAnimationTime = time
-        playerAnimationFrame = (playerAnimationFrame + 1) % playerImages.len
-        playerSprite.image = playerImages[playerAnimationFrame]
-    end if
+    // print "deltaTime: {0}".fill([deltaTime])
+    spriteControllers.updateSprites deltaTime
 
     yield
 end while
 
 key.clear
+
+text.clear
+gfx.clear
+display(DisplayType.SPRITE).clear
+display(DisplayType.SOLID).color = color.black
+
+print "Goodbye!"
