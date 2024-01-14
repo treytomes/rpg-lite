@@ -1,12 +1,22 @@
+env.importPaths = [
+	"/sys/lib",
+	"./lib/minimicro-tiled",
+]
+
 import "qa"
 import "spriteControllers"
 import "stringUtil"
 
+import "lib/tiled/tiled"
+Tiled = locals["lib/tiled/tiled"]
+
 DisplayType = {
     "QA": 0, // pre-defined
     "UI": 1,
+    "TEXT": 3,
+    // "TILE_OVER": 4,
     "SPRITE": 4, // pre-defined
-    "TILE": 6,
+    "TILE_UNDER": 5,
     "SOLID": 7, // pre-defined
 }
 
@@ -20,7 +30,7 @@ Key = {
 
 SPRITE_WIDTH = 16
 SPRITE_HEIGHT = 16
-SPRITE_SCALE = 4
+RENDER_SCALE = 4
 SPRITESHEET_WIDTH = 128
 SPRITESHEET_HEIGHT = 240
 ANIMATION_SPEED = 0.300 // seconds
@@ -28,10 +38,25 @@ ANIMATION_SPEED = 0.300 // seconds
 text.clear
 gfx.clear
 
+display(DisplayType.UI).mode = displayMode.off
+// display(DisplayType.TEXT).mode = displayMode.off
+
+// display(DisplayType.TILE_OVER).mode = displayMode.off
+// d = new TileDisplay
+// d.install DisplayType.TILE_OVER
+
+// display(DisplayType.TILE_UNDER).mode = displayMode.off
+d = new TileDisplay
+d.install DisplayType.TILE_UNDER
+
+// display(6).mode = displayMode.off
+
+
+display(DisplayType.SOLID).mode = displayMode.solidColor
 display(DisplayType.SOLID).color = color.blue
 
 display(DisplayType.SPRITE).mode = displayMode.sprite
-disp = display(4)
+disp = display(DisplayType.SPRITE)
 disp.clear
 
 SpriteSheet = {}
@@ -46,8 +71,11 @@ SpriteSheet.make = function(imagePath)
     return ss
 end function
 
-SpriteSheet.get = function(x, y)
-    // tilesPerRow = SPRITESHEET_WIDTH / SPRITE_WIDTH
+SpriteSheet.get = function(index)
+    tilesPerRow = SPRITESHEET_WIDTH / SPRITE_WIDTH
+    x = index % tilesPerRow
+    y = floor(index / tilesPerRow)
+
     sheetX = x * SPRITE_WIDTH
     sheetY = SPRITESHEET_HEIGHT - SPRITE_HEIGHT * (y + 1)
     return self.image.getImage(sheetX, sheetY, SPRITE_WIDTH, SPRITE_HEIGHT)
@@ -63,12 +91,17 @@ Player.make = function()
     return p
 end function
 
+// tlevel = Tiled.load("lib/minimicro-tiled/res/tilemaps/dungeon1.json", "lib/minimicro-tiled/res/tilemaps")
+tlevel = Tiled.load("assets/maps/Logo.tmj", "assets/tilesets")
+// tlevel = Tiled.load("assets/maps/Town.tmj", "assets/tilesets")
+qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([tlevel.error]))
+
 player0Sprites = SpriteSheet.make("assets/DawnLike/Characters/Player0.png")
 player1Sprites = SpriteSheet.make("assets/DawnLike/Characters/Player1.png")
 
 playerImages = spriteControllers.newAnimation([
-    player0Sprites.get(0, 0),
-    player1Sprites.get(0, 0),
+    player0Sprites.get(26),
+    player1Sprites.get(26),
 ])
 playerImages.speed = 0.5
 playerAnimationFrame = 0
@@ -76,17 +109,31 @@ playerSpeed = 4
 
 playerSprite = new spriteControllers.Animated
 
-playerSprite.scale = SPRITE_SCALE
+playerSprite.scale = RENDER_SCALE
 
 playerSprite.play playerImages
 
-playerSprite.x = 480
-playerSprite.y = 320
+PIXEL_WIDTH = 960
+PIXEL_HEIGHT = 640
+playerSprite.x = PIXEL_WIDTH / 2 - SPRITE_WIDTH / 2
+playerSprite.y = PIXEL_HEIGHT / 2 - SPRITE_HEIGHT / 2
 disp.sprites.push playerSprite
 
 lastAnimationTime = time
 isDone = false
 lastFrameTime = time
+
+//                    Tiled Layer, Display layer         , Tileset img index
+// Town
+// tlevel.addRenderLayer 0          , DisplayType.TILE_OVER , 0
+// tlevel.addRenderLayer 1          , DisplayType.TILE_UNDER, 0
+
+// Logo
+tlevel.addRenderLayer 0          , DisplayType.TILE_UNDER , 0
+
+tlevel.setZoom RENDER_SCALE
+tlevel.render
+
 while not isDone
     deltaTime = time - lastFrameTime
     lastFrameTime = time
@@ -98,8 +145,17 @@ while not isDone
         if k == Key.EXIT then isDone = true
     end if
 
-    playerSprite.x += key.axis("Horizontal") * playerSpeed
-	playerSprite.y += key.axis("Vertical") * playerSpeed
+    deltaX = key.axis("Horizontal") * playerSpeed
+    deltaY = key.axis("Vertical") * playerSpeed
+
+    // playerSprite.x += deltaX
+	// playerSprite.y += deltaY
+
+    // display(DisplayType.TILE_OVER).scrollX += deltaX
+    // display(DisplayType.TILE_OVER).scrollY += deltaY
+
+    display(DisplayType.TILE_UNDER).scrollX += deltaX
+    display(DisplayType.TILE_UNDER).scrollY += deltaY
 
     // print "deltaTime: {0}".fill([deltaTime])
     spriteControllers.updateSprites deltaTime
@@ -111,6 +167,7 @@ key.clear
 
 text.clear
 gfx.clear
+display(DisplayType.TILE_UNDER).clear
 display(DisplayType.SPRITE).clear
 display(DisplayType.SOLID).color = color.black
 

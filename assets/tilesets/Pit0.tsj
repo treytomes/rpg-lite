@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"..\/DawnLike\/Objects\/Pit0.png",
+ "imageheight":512,
+ "imagewidth":128,
+ "margin":0,
+ "name":"Pit0",
+ "spacing":0,
+ "tilecount":256,
+ "tiledversion":"1.10.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}
