@@ -1,0 +1,14 @@
+{ "columns":41,
+ "image":"..\/images\/tile_base.png",
+ "imageheight":816,
+ "imagewidth":656,
+ "margin":0,
+ "name":"base",
+ "spacing":0,
+ "tilecount":2091,
+ "tiledversion":"1.10.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

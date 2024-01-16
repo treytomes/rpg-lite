@@ -39,6 +39,7 @@ TiledLevel = {
 	"source": null,
 	"imgPath": "",               // Image path of tileset images.
 	"tilesetImgs": [],           // Array list of tileset images.
+	"tilesetFirstgids": [],		 // Array list of the firstgid values for each tileset.
 
 	"hasLayers": false,          // Only set to true once layers have been loaded. 
 	"x": 0,
@@ -87,7 +88,7 @@ TiledLevel.addRenderLayer = function(tiledLayerIndex, displayIndex, tilesetIndex
 
 	img = self.tilesetImgs[tilesetIndex]
 
-	return self.layers[tiledLayerIndex].setRenderLayer(displayIndex, img, clearIdx)
+	return self.layers[tiledLayerIndex].setRenderLayer(displayIndex, img, self.tilesetFirstgids[tilesetIndex], clearIdx)
 end function
 
 // Render all layers (call once). 
@@ -244,8 +245,12 @@ TiledLevel._parseTilesets = function(tilesets)
 		if not img or img.width == 8 then 
 			print "TiledLayer: Could not load image: " + self.imgPath + "/" + tilesets[i].source
 			self.tilesetImgs.push false
+			self.tilesetFirstgids.push false
 		else
 			self.tilesetImgs.push img
+			self.tilesetFirstgids.push tilesetDef.firstgid
+			// print "TiledLayer: Found image: " + self.imgPath + "/" + tilesets[i].source + " @ " + i
+			// print "firstgid: " + tilesets[i].firstgid
 		end if
 	end for
 end function
