@@ -10,13 +10,16 @@ import "stringUtil"
 import "lib/tiled/tiled"
 Tiled = locals["lib/tiled/tiled"]
 
+// The DawnLike tiles were designed to have a base tile layer along with a decoration tile layer that sits
+// on top of the base but potentially below the sprites.  Maybe layers 5 and 6?
+
 DisplayType = {
     "QA": 0, // pre-defined
     "UI": 1,
     "TEXT": 3,
     // "TILE_OVER": 4,
     "SPRITE": 4, // pre-defined
-    "TILE_UNDER": 5,
+    "TILE_BASE": 5,
     "SOLID": 7, // pre-defined
 }
 
@@ -45,9 +48,9 @@ display(DisplayType.UI).mode = displayMode.off
 // d = new TileDisplay
 // d.install DisplayType.TILE_OVER
 
-// display(DisplayType.TILE_UNDER).mode = displayMode.off
+// display(DisplayType.TILE_BASE).mode = displayMode.off
 d = new TileDisplay
-d.install DisplayType.TILE_UNDER
+d.install DisplayType.TILE_BASE
 
 // display(6).mode = displayMode.off
 
@@ -123,13 +126,13 @@ lastAnimationTime = time
 isDone = false
 lastFrameTime = time
 
-//                    Tiled Layer, Display layer         , Tileset img index
+//                       Tiled Layer, Display layer         , Tileset img index
 // Town
 // tlevel.addRenderLayer 0          , DisplayType.TILE_OVER , 0
-// tlevel.addRenderLayer 1          , DisplayType.TILE_UNDER, 0
+// tlevel.addRenderLayer 1          , DisplayType.TILE_BASE, 0
 
 // Logo
-tlevel.addRenderLayer 0          , DisplayType.TILE_UNDER , 0
+tlevel.addRenderLayer 0          , DisplayType.TILE_BASE , 0
 
 tlevel.setZoom RENDER_SCALE
 tlevel.render
@@ -154,8 +157,8 @@ while not isDone
     // display(DisplayType.TILE_OVER).scrollX += deltaX
     // display(DisplayType.TILE_OVER).scrollY += deltaY
 
-    display(DisplayType.TILE_UNDER).scrollX += deltaX
-    display(DisplayType.TILE_UNDER).scrollY += deltaY
+    display(DisplayType.TILE_BASE).scrollX += deltaX
+    display(DisplayType.TILE_BASE).scrollY += deltaY
 
     // print "deltaTime: {0}".fill([deltaTime])
     spriteControllers.updateSprites deltaTime
@@ -167,7 +170,7 @@ key.clear
 
 text.clear
 gfx.clear
-display(DisplayType.TILE_UNDER).clear
+display(DisplayType.TILE_BASE).clear
 display(DisplayType.SPRITE).clear
 display(DisplayType.SOLID).color = color.black
 
