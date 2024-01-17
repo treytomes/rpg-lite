@@ -135,8 +135,12 @@ TiledLevel.scrollBy = function(dx, dy)
 	self.y = y
 
 	for i in range(0, self.layers.len - 1)
-		self.layers[i].display.scrollX = x
-		self.layers[i].display.scrollY = y
+		// BUG FIX: Don't scroll layers that aren't rendered.
+		disp = self.layers[i].display
+		if disp != null then
+			disp.scrollX = x
+			disp.scrollY = y
+		end if
 	end for
 
 end function
@@ -151,8 +155,12 @@ TiledLevel.scrollTo = function(x, y)
 	self.y = y
 
 	for i in range(0, self.layers.len - 1)
-		self.layers[i].display.scrollX = x
-		self.layers[i].display.scrollY = y
+		// BUG FIX: Don't scroll layers that aren't rendered.
+		disp = self.layers[i].display
+		if disp != null then
+			disp.scrollX = x
+			disp.scrollY = y
+		end if
 	end for
 end function
 

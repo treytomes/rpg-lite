@@ -1,6 +1,8 @@
 import "lib/tiled/TiledObject"
 TiledObject = locals["lib/tiled/TiledObject"]
 
+// TODO: Everything about objectgroup support was added after downloading the library.
+
 TiledObjectGroup = {
     "draworder": "",
     "id": 0,
