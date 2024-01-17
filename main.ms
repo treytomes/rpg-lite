@@ -1,58 +1,5 @@
-import "listUtil"
-import "qa"
-import "spriteControllers"
-import "stringUtil"
+import "init"
 
-// Note how system-defined symbols can be extended.
-env.addImportPath = function(path)
-    // `self` == `env`
-    if not self.importPaths.contains(path) then
-        self.importPaths.push path
-    end if
-end function
-
-env.addImportPath "./lib/minimicro-tiled"
-env.addImportPath "./src"
-
-import "lib/tiled/tiled"
-Tiled = locals["lib/tiled/tiled"]
-
-// The DawnLike tiles were designed to have a base tile layer along with a decoration tile layer that sits
-// on top of the base but potentially below the sprites.  Maybe layers 5 and 6?
-
-// I'm not seeing any tiles designed to be drawn over the sprites, which is just as well as I'm not sure where I'd put them.
-// I'm not really wanting to ditch the default TextDisplay.
-
-import "coreUtil"
-import "constants"
-import "math"
-SpriteSheet = require("SpriteSheet")
-
-text.clear
-gfx.clear
-
-display(DisplayType.UI).mode = displayMode.off
-// display(DisplayType.TEXT).mode = displayMode.off
-
-// display(DisplayType.TILE_OVER).mode = displayMode.off
-// d = new TileDisplay  
-// d.install DisplayType.TILE_OVER
-
-(new TileDisplay).install DisplayType.TILE_DECO
-(new TileDisplay).install DisplayType.TILE_BASE
-
-display(DisplayType.SOLID).mode = displayMode.solidColor
-display(DisplayType.SOLID).color = color.blue
-
-display(DisplayType.SPRITE).mode = displayMode.sprite
-disp = display(DisplayType.SPRITE)
-disp.clear
-
-Sprites = require("Sprites")
-Entity = require("Entity")
-
-// tlevel = Tiled.load("lib/minimicro-tiled/res/tilemaps/dungeon1.json", "lib/minimicro-tiled/res/tilemaps")
-// tlevel = Tiled.load("assets/maps/Logo.tmj", "assets/tilesets")
 tlevel = Tiled.load("assets/maps/Town_v3.tmj", "assets/tilesets")
 qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([tlevel.error]))
 

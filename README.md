@@ -7,6 +7,12 @@ I found the image assets [here](https://opengameart.org/content/dawnlike-16x16-u
 
 Please do hit those Like and Subscribe buttons on my videos if you have a mind to; it encourages me to continue creating content here!
 
+# DawnLike Tiles
+
+The DawnLike tiles were designed to have a base tile layer along with a decoration tile layer that sits on top of the base but potentially below the sprites.  Maybe layers 5 and 6?
+
+I'm not seeing any tiles designed to be drawn over the sprites, which is just as well as I'm not sure where I'd put them.  I'm not really wanting to ditch the default TextDisplay.
+
 # References
 
 - [Git](https://github.com/treytomes/rpg-lite)
