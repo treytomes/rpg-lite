@@ -17,14 +17,18 @@ globals.Key = {
     "EXIT": 27,
 }
 
-globals.TILE_SIZE = 16
-globals.RENDER_SCALE = 4
-globals.SPRITESHEET_WIDTH = 128
-globals.SPRITESHEET_HEIGHT = 240
-globals.ANIMATION_SPEED = 0.300 // seconds
-
 globals.PIXEL_WIDTH = 960
 globals.PIXEL_HEIGHT = 640
+
+globals.TILE_SIZE = 16
+globals.RENDER_SCALE = 4
+globals.TILE_SIZE_PIXELS = TILE_SIZE * RENDER_SCALE
+
+// TODO: These need to get pulled from the image.
+globals.SPRITESHEET_WIDTH = 128
+globals.SPRITESHEET_HEIGHT = 240
+
+globals.ANIMATION_SPEED = 0.300 // seconds
 
 globals.TILEDISPLAY_WIDTH = PIXEL_WIDTH / TILE_SIZE / RENDER_SCALE
 globals.TILEDISPLAY_HEIGHT = PIXEL_HEIGHT / TILE_SIZE / RENDER_SCALE

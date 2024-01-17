@@ -117,14 +117,14 @@ player = Entity.make("player", 26 + 15)
 player.moveTo(TILEDISPLAY_CENTER_X, TILEDISPLAY_CENTER_Y) // The player will always be centered.
 // Pull the player data from the tilemap.
 playerData = tlevel.getByName("entities").getByName("Player")
-math.transformTiledObject(playerData)
+playerData = math.transformTiledObject(playerData)
 tlevel.scrollTo(playerData.x, playerData.y)
 
 
 npc = Entity.make("player", 26)
 // Pull the player data from the tilemap.
 npcData = tlevel.getByName("entities").getByName("NPC0")
-math.transformTiledObject(npcData)
+npcData = math.transformTiledObject(npcData)
 npc.moveTo(npcData.x + TILEDISPLAY_CENTER_X - tlevel.x, npcData.y + TILEDISPLAY_CENTER_Y - tlevel.y)
 
 while not isDone
