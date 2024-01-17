@@ -1,3 +1,10 @@
+// TiledObjectProperty = {}
+// TiledObjectProperty.load = function(raw)
+//     self.name = raw.name
+//     self.type = raw.type
+//     self.value = raw.value
+// end function
+
 TiledObject = {}
 
 TiledObject.load = function(object)
@@ -10,6 +17,12 @@ TiledObject.load = function(object)
     self.width = object.width
     self.x = object.x
     self.y = object.y
+
+    // There's a prop.type, but I'm not sure it's needed here.
+    for prop in object.properties
+        self[prop.name] = prop.value
+    end for
+
     return self
 end function
 
