@@ -80,11 +80,6 @@ tlevel.render
 
 lastAnimationTime = 0
 
-// player = Entity.make("player", 26 + 15)
-
-// // Pull the player data from the tilemap.
-// player.moveTo math.transformTiledObject(tlevel.getByName("entities").getByName("Player"))
-
 player = Entity.make(tlevel, "Player")
 
 tlevel.scrollTo player.sprite.x, player.sprite.y
@@ -92,8 +87,6 @@ tlevel.scrollTo player.sprite.x, player.sprite.y
 display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
 display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
 
-// npc = Entity.make("player", 26)
-// npc.moveTo math.transformTiledObject(tlevel.getByName("entities").getByName("NPC0"))
 npc = Entity.make(tlevel, "NPC0")
 
 while not isDone
