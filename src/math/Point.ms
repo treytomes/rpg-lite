@@ -30,12 +30,20 @@ Point.negate = function()
 	return (new Point).init(-self.x, -self.y)
 end function
 
-Point.add = function(pnt)
-	return (new Point).init(self.x + pnt.x, self.y + pnt.y)
+Point.add = function(pnt_or_x, y=null)
+	if pnt_or_x isa Point then
+		return (new Point).init(self.x + pnt_or_x.x, self.y + pnt_or_x.y)
+	else
+		return (new Point).init(self.x + pnt_or_x, self.y + y)
+	end if
 end function
 
-Point.subtract = function(pnt)
-	return (new Point).init(self.x - pnt.x, self.y - pnt.y)
+Point.subtract = function(pnt_or_x, y=null)
+	if pnt_or_x isa Point then
+		return (new Point).init(self.x - pnt_or_x.x, self.y - pnt_or_x.y)
+	else
+		return (new Point).init(self.x - pnt_or_x, self.y - y)
+	end if
 end function
 
 Point.sign = function(pnt)
