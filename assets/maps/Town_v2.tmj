@@ -53,9 +53,32 @@
          "width":20,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":4,
+         "name":"entities",
+         "objects":[
+                {
+                 "gid":2095,
+                 "height":16,
+                 "id":3,
+                 "name":"Player",
+                 "rotation":0,
+                 "type":"Player",
+                 "visible":true,
+                 "width":16,
+                 "x":208,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":4,
- "nextobjectid":1,
+ "nextlayerid":5,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

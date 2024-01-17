@@ -95,8 +95,6 @@ TiledLayer.render = function()
 
 	tileCount = width * height
 
-	// print "firstgid: " + self.firstgid
-
 	// Render cells
 	for i in range(0, tileCount - 1)
 		// TODO: The `- 1` here is a bug.  The offset should be based on the `firstgid` value in the map .tmj file.
@@ -138,7 +136,7 @@ TiledLayer._parseData = function(raw)
 
 	j = 0
 	data = [null] * rawList.len
-  for i in range(0, rawList.len - 1)
+	  for i in range(0, rawList.len - 1)
 		j = (i % self.width) + (self.width * (self.height - floor(i/self.width) - 1))
 		data[j] = rawList[i]
 
@@ -146,7 +144,7 @@ TiledLayer._parseData = function(raw)
 		if i % 500 == 0 and i > 490 then
 			yield
 		end if
-  end for
+  	end for
 
 	return data
 end function

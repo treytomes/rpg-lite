@@ -12,6 +12,7 @@ env.addImportPath = function(path)
 end function
 
 env.addImportPath "./lib/minimicro-tiled"
+env.addImportPath "./src"
 
 import "lib/tiled/tiled"
 Tiled = locals["lib/tiled/tiled"]
@@ -22,31 +23,10 @@ Tiled = locals["lib/tiled/tiled"]
 // I'm not seeing any tiles designed to be drawn over the sprites, which is just as well as I'm not sure where I'd put them.
 // I'm not really wanting to ditch the default TextDisplay.
 
-DisplayType = {
-    "QA": 0, // pre-defined
-    "UI": 1,
-    "TEXT": 3,
-    // "TILE_OVER": 4,
-    "SPRITE": 4, // pre-defined
-    "TILE_DECO": 5,
-    "TILE_BASE": 6,
-    "SOLID": 7, // pre-defined
-}
-
-Key = {
-    "UP": 19,
-    "DOWN": 20,
-    "LEFT": 17,
-    "RIGHT": 18,
-    "EXIT": 27,
-}
-
-SPRITE_WIDTH = 16
-SPRITE_HEIGHT = 16
-RENDER_SCALE = 4
-SPRITESHEET_WIDTH = 128
-SPRITESHEET_HEIGHT = 240
-ANIMATION_SPEED = 0.300 // seconds
+import "coreUtil"
+import "constants"
+import "math"
+SpriteSheet = require("SpriteSheet")
 
 text.clear
 gfx.clear
@@ -55,7 +35,7 @@ display(DisplayType.UI).mode = displayMode.off
 // display(DisplayType.TEXT).mode = displayMode.off
 
 // display(DisplayType.TILE_OVER).mode = displayMode.off
-// d = new TileDisplay
+// d = new TileDisplay  
 // d.install DisplayType.TILE_OVER
 
 d = new TileDisplay
@@ -70,28 +50,6 @@ display(DisplayType.SOLID).color = color.blue
 display(DisplayType.SPRITE).mode = displayMode.sprite
 disp = display(DisplayType.SPRITE)
 disp.clear
-
-SpriteSheet = {}
-SpriteSheet.init = function(imagePath)
-    self.imagePath = imagePath
-    self.image = file.loadImage(self.imagePath)
-end function
-
-SpriteSheet.make = function(imagePath)
-    ss = new SpriteSheet
-    ss.init imagePath
-    return ss
-end function
-
-SpriteSheet.get = function(index)
-    tilesPerRow = SPRITESHEET_WIDTH / SPRITE_WIDTH
-    x = index % tilesPerRow
-    y = floor(index / tilesPerRow)
-
-    sheetX = x * SPRITE_WIDTH
-    sheetY = SPRITESHEET_HEIGHT - SPRITE_HEIGHT * (y + 1)
-    return self.image.getImage(sheetX, sheetY, SPRITE_WIDTH, SPRITE_HEIGHT)
-end function
 
 Player = {}
 Player.init = function()
@@ -125,10 +83,11 @@ playerSprite.scale = RENDER_SCALE
 
 playerSprite.play playerImages
 
-PIXEL_WIDTH = 960
-PIXEL_HEIGHT = 640
-playerSprite.x = PIXEL_WIDTH / 2 - SPRITE_WIDTH / 2
-playerSprite.y = PIXEL_HEIGHT / 2 - SPRITE_HEIGHT / 2
+// A pile of complicated math to ensure the player is rendered on the center tile.
+
+playerSprite.x = TILEDISPLAY_CENTER_X
+playerSprite.y = TILEDISPLAY_CENTER_Y
+
 disp.sprites.push playerSprite
 
 lastAnimationTime = time
@@ -147,6 +106,7 @@ lastFrameTime = time
 tlevel.addRenderLayer 0          , DisplayType.TILE_BASE
 tlevel.addRenderLayer 1          , DisplayType.TILE_DECO
 
+// Load in all our deco tilesets so we can animate them.
 tiles_deco = [
     file.loadImage("assets/images/tile_deco0.png"),
     file.loadImage("assets/images/tile_deco1.png"),
@@ -157,6 +117,13 @@ tlevel.setZoom RENDER_SCALE
 tlevel.render
 
 lastAnimationTime = 0
+
+// Pull the player data from the tilemap.
+playerData = tlevel.getByName("entities").getByName("Player")
+
+math.transformTiledObject(playerData)
+
+tlevel.scrollTo(playerData.x, playerData.y)
 
 while not isDone
     deltaTime = time - lastFrameTime
@@ -172,21 +139,14 @@ while not isDone
     deltaX = key.axis("Horizontal") * playerSpeed
     deltaY = key.axis("Vertical") * playerSpeed
 
-    // playerSprite.x += deltaX
-	// playerSprite.y += deltaY
-
-    // display(DisplayType.TILE_OVER).scrollX += deltaX
-    // display(DisplayType.TILE_OVER).scrollY += deltaY
-
-    // display(DisplayType.TILE_BASE).scrollX += deltaX
-    // display(DisplayType.TILE_BASE).scrollY += deltaY
-
     // TODO: Found a scrollBy method!
     tlevel.scrollBy(deltaX, deltaY)
+    // print "Scroll: ({scrollX}, {scrollY})".fill(display(DisplayType.TILE_BASE))
 
     // print "deltaTime: {0}".fill([deltaTime])
     spriteControllers.updateSprites deltaTime
 
+    // TODO: Explain this animation loop.
     if time - lastAnimationTime >= ANIMATION_SPEED then
         // Time to animate the map.
 
