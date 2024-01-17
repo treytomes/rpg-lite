@@ -38,11 +38,8 @@ display(DisplayType.UI).mode = displayMode.off
 // d = new TileDisplay  
 // d.install DisplayType.TILE_OVER
 
-d = new TileDisplay
-d.install DisplayType.TILE_DECO
-
-d = new TileDisplay
-d.install DisplayType.TILE_BASE
+(new TileDisplay).install DisplayType.TILE_DECO
+(new TileDisplay).install DisplayType.TILE_BASE
 
 display(DisplayType.SOLID).mode = displayMode.solidColor
 display(DisplayType.SOLID).color = color.blue
@@ -51,38 +48,8 @@ display(DisplayType.SPRITE).mode = displayMode.sprite
 disp = display(DisplayType.SPRITE)
 disp.clear
 
-Sprites = {
-    "player": [
-        SpriteSheet.make("assets/DawnLike/Characters/Player0.png"),
-        SpriteSheet.make("assets/DawnLike/Characters/Player1.png"),
-    ],
-}
-
-Entity = {}
-Entity.init = function(spritesetName, index)
-    self.animation = spriteControllers.newAnimation([
-        Sprites[spritesetName][0].get(index),
-        Sprites[spritesetName][1].get(index),
-    ])
-    self.animation.speed = 0.5
-    self.animationFrame = 0
-    self.speed = 4
-    self.sprite = new spriteControllers.Animated
-    self.sprite.scale = RENDER_SCALE
-    self.sprite.play self.animation
-    display(DisplayType.SPRITE).sprites.push self.sprite
-end function
-
-Entity.make = function(spritesetName, index)
-    e = new Entity
-    e.init spritesetName, index
-    return e
-end function
-
-Entity.moveTo = function(x, y)
-    self.sprite.x = x
-    self.sprite.y = y
-end function
+Sprites = require("Sprites")
+Entity = require("Entity")
 
 // tlevel = Tiled.load("lib/minimicro-tiled/res/tilemaps/dungeon1.json", "lib/minimicro-tiled/res/tilemaps")
 // tlevel = Tiled.load("assets/maps/Logo.tmj", "assets/tilesets")
@@ -113,19 +80,21 @@ tlevel.render
 
 lastAnimationTime = 0
 
-player = Entity.make("player", 26 + 15)
-player.moveTo(TILEDISPLAY_CENTER_X, TILEDISPLAY_CENTER_Y) // The player will always be centered.
-// Pull the player data from the tilemap.
-playerData = tlevel.getByName("entities").getByName("Player")
-playerData = math.transformTiledObject(playerData)
-tlevel.scrollTo(playerData.x, playerData.y)
+// player = Entity.make("player", 26 + 15)
 
+// // Pull the player data from the tilemap.
+// player.moveTo math.transformTiledObject(tlevel.getByName("entities").getByName("Player"))
 
-npc = Entity.make("player", 26)
-// Pull the player data from the tilemap.
-npcData = tlevel.getByName("entities").getByName("NPC0")
-npcData = math.transformTiledObject(npcData)
-npc.moveTo(npcData.x + TILEDISPLAY_CENTER_X - tlevel.x, npcData.y + TILEDISPLAY_CENTER_Y - tlevel.y)
+player = Entity.make(tlevel, "Player")
+
+tlevel.scrollTo player.sprite.x, player.sprite.y
+// NOTE: The SpriteDisplay is scrollable too!
+display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
+display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+
+// npc = Entity.make("player", 26)
+// npc.moveTo math.transformTiledObject(tlevel.getByName("entities").getByName("NPC0"))
+npc = Entity.make(tlevel, "NPC0")
 
 while not isDone
     deltaTime = time - lastFrameTime
@@ -138,13 +107,18 @@ while not isDone
         if k == Key.EXIT then isDone = true
     end if
 
-    deltaX = key.axis("Horizontal") * playerSpeed
-    deltaY = key.axis("Vertical") * playerSpeed
+    deltaX = key.axis("Horizontal") * player.speed
+    deltaY = key.axis("Vertical") * player.speed
 
-    // Update everything relative to the player.
-    tlevel.scrollBy(deltaX, deltaY)
-    npc.moveTo(npcData.x + TILEDISPLAY_CENTER_X - tlevel.x, npcData.y + TILEDISPLAY_CENTER_Y - tlevel.y)
-    // print "Scroll: ({scrollX}, {scrollY})".fill(display(DisplayType.TILE_BASE))
+    // Only if player movement occurred.
+    if deltaX != 0 or deltaY != 0 then
+        player.moveBy math.Point.make(deltaX, deltaY)
+
+        // Scroll the displays to remain centered on the player.
+        tlevel.scrollTo(player.sprite.x, player.sprite.y)
+        display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
+        display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+    end if
 
     // Move the npc a little spastically.
     // npcData.x += rnd
