@@ -98,6 +98,17 @@
                  "height":16,
                  "id":3,
                  "name":"Player",
+                 "properties":[
+                        {
+                         "name":"Sprite Index",
+                         "type":"int",
+                         "value":41
+                        }, 
+                        {
+                         "name":"Sprite Sheet",
+                         "type":"string",
+                         "value":"player"
+                        }],
                  "rotation":0,
                  "type":"Player",
                  "visible":true,
@@ -110,6 +121,17 @@
                  "height":16,
                  "id":4,
                  "name":"NPC0",
+                 "properties":[
+                        {
+                         "name":"Sprite Index",
+                         "type":"int",
+                         "value":26
+                        }, 
+                        {
+                         "name":"Sprite Sheet",
+                         "type":"string",
+                         "value":"player"
+                        }],
                  "rotation":0,
                  "type":"NPC",
                  "visible":true,
