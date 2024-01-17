@@ -51,60 +51,55 @@ display(DisplayType.SPRITE).mode = displayMode.sprite
 disp = display(DisplayType.SPRITE)
 disp.clear
 
-Player = {}
-Player.init = function()
+Sprites = {
+    "player": [
+        SpriteSheet.make("assets/DawnLike/Characters/Player0.png"),
+        SpriteSheet.make("assets/DawnLike/Characters/Player1.png"),
+    ],
+}
+
+Entity = {}
+Entity.init = function(spritesetName, index)
+    self.animation = spriteControllers.newAnimation([
+        Sprites[spritesetName][0].get(index),
+        Sprites[spritesetName][1].get(index),
+    ])
+    self.animation.speed = 0.5
+    self.animationFrame = 0
+    self.speed = 4
+    self.sprite = new spriteControllers.Animated
+    self.sprite.scale = RENDER_SCALE
+    self.sprite.play self.animation
+    display(DisplayType.SPRITE).sprites.push self.sprite
 end function
 
-Player.make = function()
-    p = new Player
-    p.init
-    return p
+Entity.make = function(spritesetName, index)
+    e = new Entity
+    e.init spritesetName, index
+    return e
+end function
+
+Entity.moveTo = function(x, y)
+    self.sprite.x = x
+    self.sprite.y = y
 end function
 
 // tlevel = Tiled.load("lib/minimicro-tiled/res/tilemaps/dungeon1.json", "lib/minimicro-tiled/res/tilemaps")
 // tlevel = Tiled.load("assets/maps/Logo.tmj", "assets/tilesets")
-tlevel = Tiled.load("assets/maps/Town_v2.tmj", "assets/tilesets")
+tlevel = Tiled.load("assets/maps/Town_v3.tmj", "assets/tilesets")
 qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([tlevel.error]))
-
-player0Sprites = SpriteSheet.make("assets/DawnLike/Characters/Player0.png")
-player1Sprites = SpriteSheet.make("assets/DawnLike/Characters/Player1.png")
-
-playerImages = spriteControllers.newAnimation([
-    player0Sprites.get(26),
-    player1Sprites.get(26),
-])
-playerImages.speed = 0.5
-playerAnimationFrame = 0
-playerSpeed = 4
-
-playerSprite = new spriteControllers.Animated
-
-playerSprite.scale = RENDER_SCALE
-
-playerSprite.play playerImages
-
-// A pile of complicated math to ensure the player is rendered on the center tile.
-
-playerSprite.x = TILEDISPLAY_CENTER_X
-playerSprite.y = TILEDISPLAY_CENTER_Y
-
-disp.sprites.push playerSprite
 
 lastAnimationTime = time
 isDone = false
 lastFrameTime = time
 
-//                       Tiled Layer, Display layer         , Tileset img index
-// Town
-// tlevel.addRenderLayer 0          , DisplayType.TILE_OVER , 0
-// tlevel.addRenderLayer 1          , DisplayType.TILE_BASE, 0
+baseId = tlevel.getByName("base").id
+decoId = tlevel.getByName("decoration").id - baseId
+collisionId = tlevel.getByName("collision").id - baseId
 
-// Logo
-// tlevel.addRenderLayer 0          , DisplayType.TILE_BASE , 0
-
-// Town_v2
-tlevel.addRenderLayer 0          , DisplayType.TILE_BASE
-tlevel.addRenderLayer 1          , DisplayType.TILE_DECO
+// We're only rendering the base and deco tiles.
+tlevel.addRenderLayer 0, DisplayType.TILE_BASE
+tlevel.addRenderLayer decoId, DisplayType.TILE_DECO
 
 // Load in all our deco tilesets so we can animate them.
 tiles_deco = [
@@ -118,12 +113,19 @@ tlevel.render
 
 lastAnimationTime = 0
 
+player = Entity.make("player", 26 + 15)
+player.moveTo(TILEDISPLAY_CENTER_X, TILEDISPLAY_CENTER_Y) // The player will always be centered.
 // Pull the player data from the tilemap.
 playerData = tlevel.getByName("entities").getByName("Player")
-
 math.transformTiledObject(playerData)
-
 tlevel.scrollTo(playerData.x, playerData.y)
+
+
+npc = Entity.make("player", 26)
+// Pull the player data from the tilemap.
+npcData = tlevel.getByName("entities").getByName("NPC0")
+math.transformTiledObject(npcData)
+npc.moveTo(npcData.x + TILEDISPLAY_CENTER_X - tlevel.x, npcData.y + TILEDISPLAY_CENTER_Y - tlevel.y)
 
 while not isDone
     deltaTime = time - lastFrameTime
@@ -139,14 +141,18 @@ while not isDone
     deltaX = key.axis("Horizontal") * playerSpeed
     deltaY = key.axis("Vertical") * playerSpeed
 
-    // TODO: Found a scrollBy method!
+    // Update everything relative to the player.
     tlevel.scrollBy(deltaX, deltaY)
+    npc.moveTo(npcData.x + TILEDISPLAY_CENTER_X - tlevel.x, npcData.y + TILEDISPLAY_CENTER_Y - tlevel.y)
     // print "Scroll: ({scrollX}, {scrollY})".fill(display(DisplayType.TILE_BASE))
+
+    // Move the npc a little spastically.
+    // npcData.x += rnd
+    // npcData.y += rnd
 
     // print "deltaTime: {0}".fill([deltaTime])
     spriteControllers.updateSprites deltaTime
 
-    // TODO: Explain this animation loop.
     if time - lastAnimationTime >= ANIMATION_SPEED then
         // Time to animate the map.
 
