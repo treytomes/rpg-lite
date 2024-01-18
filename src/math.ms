@@ -1,10 +1,12 @@
+TILE_LEVEL_HEIGHT = 32
+
 // Convert Tiled pixel coordinated into MiniMicro coordinates.
 // Return a Point object.
 transformTiledObject = function(obj)
     pnt = Point.make(obj).multiply(RENDER_SCALE)
 
     // Invert the y according to the pixel height of the map.
-    pnt.y = tlevel.height * TILE_SIZE_PIXELS - pnt.y
+    pnt.y = TILE_LEVEL_HEIGHT * TILE_SIZE_PIXELS - pnt.y
 
     // Offset by the physical render position of the player (the screen center).
     return pnt.add(Point.make(TILEDISPLAY_CENTER_X, TILEDISPLAY_CENTER_Y).negate).

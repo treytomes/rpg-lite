@@ -1,5 +1,3 @@
-import "init"
-
 tlevel = Tiled.load("assets/maps/Town_v3.tmj", "assets/tilesets")
 qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([tlevel.error]))
 
@@ -81,13 +79,4 @@ while not isDone
     yield
 end while
 
-key.clear
-
-text.clear
-gfx.clear
-display(DisplayType.TILE_DECO).clear
-display(DisplayType.TILE_BASE).clear
-display(DisplayType.SPRITE).clear
-display(DisplayType.SOLID).color = color.black
-
-print "Goodbye!"
+run "cleanup"

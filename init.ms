@@ -50,3 +50,5 @@ display(DisplayType.SOLID).color = color.blue
 display(DisplayType.SPRITE).mode = displayMode.sprite
 disp = display(DisplayType.SPRITE)
 disp.clear
+
+run "main"
