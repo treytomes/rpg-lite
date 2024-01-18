@@ -1,0 +1,3 @@
+[submodule "lib/minimicro-tiled"]
+	path = lib/minimicro-tiled
+	url = git@github.com:treytomes/minimicro-tiled.git
