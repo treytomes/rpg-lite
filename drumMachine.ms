@@ -1,4 +1,4 @@
-// # Drum Machine V2
+// # Drum Machine V1.1
 
 // # TODO
 // I'm thinking of extending this a bit, but I'm not completely sure yet.
@@ -16,15 +16,34 @@ text.delimiter = ""
 print " "*15 + "Each row is a different instrument."
 text.delimiter = char(13)
 
+SECONDS_PER_MINUTE = 60
+BEATS_PER_MINUTE = 90
+SAMPLE_DURATION = SECONDS_PER_MINUTE / BEATS_PER_MINUTE
+
+Notes = {
+	"C4": 60,
+}
+
+// 1b / 90BEATS_PER_MINUTE = 1b * (1/90)(m/b) * 60s/m 
+
 // Load sounds
 sounds = []
-// First four are instrument sounds, adjusted in pitch.
-instrument = file.loadSound("/sys/sounds/elecGuitarC4.wav")
-instrumentFreq = noteFreq(60)
-notes = [[60, 64, 67, 72],  // major C chord
-		 [60, 65, 68, 72],  // major F chord
-		 [62, 67, 71, 74],	// major G chord
-		 [60, 64, 67, 72]]  // major C chord
+
+// // First four are instrument sounds, adjusted in pitch.
+// instrument = file.loadSound("/sys/sounds/elecGuitarC4.wav")
+// instrumentFreq = noteFreq(60)
+
+// Going to try and replace the electric guitar with a sine wave generator playing a C4 for 1 second.
+instrumentFreq = noteFreq(Notes.C4)
+instrument = new Sound
+instrument.init SAMPLE_DURATION, instrumentFreq, [1], Sound.sineWave
+
+notes = [
+	[60, 64, 67, 72], 	// major C chord
+	[60, 65, 68, 72],	// major F chord
+	[62, 67, 71, 74],	// major G chord
+	[60, 64, 67, 72],	// major C chord
+]
 sounds.push instrument
 sounds.push instrument
 sounds.push instrument
@@ -142,7 +161,6 @@ checkMouse = function
 end function
 
 // update the lit column and play selected sounds
-bpm = 90
 next16th = time
 updateMusic = function
 	if time < next16th then return
@@ -150,7 +168,7 @@ updateMusic = function
 	for row in range(0, rows-1)
 		if isLit(litCol, row) then playSound(row, litCol)
 	end for
-	globals.next16th = next16th + 15 / bpm
+	globals.next16th = next16th + 15 / BEATS_PER_MINUTE
 end function
 
 // main loop
