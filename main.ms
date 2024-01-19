@@ -34,7 +34,13 @@ display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
 
 npc = Entity.make(tlevel, "NPC0")
 
+// print "Here we go."
+
 while not isDone
+// print "Is moving: " + player.isMoving
+// print "Position: " + math.Point.make(player.sprite).str
+// print "Target: " + player.targetPosition.str
+
     deltaTime = time - lastFrameTime
     lastFrameTime = time
 
@@ -45,17 +51,20 @@ while not isDone
         if k == Key.EXIT then isDone = true
     end if
 
-    deltaX = key.axis("Horizontal") * player.speed
-    deltaY = key.axis("Vertical") * player.speed
+    if not player.isMoving then
+        // print "I'm not moving!"
+        deltaX = key.axis("Horizontal") * player.speed
+        deltaY = key.axis("Vertical") * player.speed
 
-    // Only if player movement occurred.
-    if deltaX != 0 or deltaY != 0 then
-        player.moveBy math.Point.make(deltaX, deltaY)
-
-        // Scroll the displays to remain centered on the player.
-        tlevel.scrollTo(player.sprite.x, player.sprite.y)
-        display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
-        display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+        if deltaY < 0 then // moving down
+            player.moveBy math.Point.unitY.negate.multiply(TILE_SIZE_PIXELS)
+        else if deltaY > 0 then // moving up
+            player.moveBy math.Point.unitY.multiply(TILE_SIZE_PIXELS)
+        else if deltaX < 0 then // moving left
+            player.moveBy math.Point.unitX.negate.multiply(TILE_SIZE_PIXELS)
+        else if deltaX > 0 then // moving right
+            player.moveBy math.Point.unitX.multiply(TILE_SIZE_PIXELS)
+        end if
     end if
 
     // Move the npc a little spastically.
@@ -64,6 +73,17 @@ while not isDone
 
     // print "deltaTime: {0}".fill([deltaTime])
     spriteControllers.updateSprites deltaTime
+    shouldCameraMove = player.isMoving
+    player.update deltaTime
+    npc.update deltaTime
+
+    // Only if player movement occurred.
+    if shouldCameraMove then
+        // Scroll the displays to remain centered on the player.
+        tlevel.scrollTo(player.sprite.x, player.sprite.y)
+        display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
+        display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+    end if
 
     if time - lastAnimationTime >= ANIMATION_SPEED then
         // Time to animate the map.

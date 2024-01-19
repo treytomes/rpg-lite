@@ -26,6 +26,10 @@ Point.multiply = function(n)
 	return (new Point).init(n * self.x, n * self.y)
 end function
 
+Point.divide = function(v)
+	return (new Point).init(self.x / v, self.y / v)
+end function
+
 Point.negate = function()
 	return (new Point).init(-self.x, -self.y)
 end function
@@ -50,16 +54,20 @@ Point.sign = function(pnt)
 	return (new Point).init(sign(self.x), sign(self.y))
 end function
 
-Point.scale = function(v)
-	return (new Point).init(v * self.x, v * self.y)
-end function
-
 Point.floor = function()
 	return (new Point).init(floor(self.x), floor(self.y))
 end function
 
 Point.length = function()
 	return (self.x * self.x + self.y * self.y) ^ 0.5
+end function
+
+Point.distance = function(otherPoint)
+	return self.subtract(otherPoint).length
+end function
+
+Point.normalize = function()
+	return self.divide(self.length)
 end function
 
 Point.zero = function()
