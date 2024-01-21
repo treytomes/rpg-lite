@@ -3,6 +3,11 @@ LEVEL_NAME = "Town_v3"
 tlevel = RPGLiteTiledLevel.load("assets/maps/{0}.tmj".fill([ LEVEL_NAME ]), "assets/tilesets")
 qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([ tlevel.error ]))
 
+backgroundMusicPath = tlevel.properties["Background Music"]
+bgm = file.loadSound(backgroundMusicPath)
+bgm.loop = true
+bgm.play Settings.Sound["Music Volume"]
+
 lastAnimationTime = time
 isDone = false
 lastFrameTime = time
@@ -45,11 +50,6 @@ display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
 tlevel.entities.push player
 tlevel.entities.push npc0
 tlevel.entities.push npc1
-
-backgroundMusicPath = tlevel.properties["Background Music"]
-bgm = file.loadSound(backgroundMusicPath)
-bgm.loop = true
-bgm.play Settings.Sound["Music Volume"]
 
 while not isDone
 // print "Is moving: " + player.isMoving
