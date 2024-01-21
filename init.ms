@@ -24,6 +24,9 @@ env.addImportPath "./src"
 import "lib/tiled/tiled"
 globals.Tiled = locals["lib/tiled/tiled"]
 
+import "lib/tiled/TiledLevel"
+globals.TiledLevel = locals["lib/tiled/TiledLevel"]
+
 import "coreUtil"
 import "constants"
 import "math"
@@ -50,5 +53,14 @@ display(DisplayType.SOLID).color = color.blue
 display(DisplayType.SPRITE).mode = displayMode.sprite
 disp = display(DisplayType.SPRITE)
 disp.clear
+
+ResetValues = {
+    "textColor": text.color,
+    // "textBackColor": text.backColor,
+}
+
+text.color = color.red
+// text.backColor = "#00000088"
+
 
 run "main"

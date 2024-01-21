@@ -1,3 +1,5 @@
+// TODO: Use "importUtil".
+
 // Load a module into a local variable, allowing it to be reassigned at will.
 // e.g. player = import("playerBehaviors")
 globals.require = function(moduleName)

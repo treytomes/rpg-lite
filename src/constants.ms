@@ -23,6 +23,7 @@ globals.PIXEL_HEIGHT = 640
 globals.TILE_SIZE = 16
 globals.RENDER_SCALE = 4
 globals.TILE_SIZE_PIXELS = TILE_SIZE * RENDER_SCALE
+globals.TILE_LEVEL_SIZE = 32
 
 // TODO: These need to get pulled from the image.
 globals.SPRITESHEET_WIDTH = 128

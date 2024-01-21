@@ -138,6 +138,29 @@
                  "width":16,
                  "x":224,
                  "y":224
+                }, 
+                {
+                 "gid":2095,
+                 "height":16,
+                 "id":5,
+                 "name":"NPC1",
+                 "properties":[
+                        {
+                         "name":"Sprite Index",
+                         "type":"int",
+                         "value":27
+                        }, 
+                        {
+                         "name":"Sprite Sheet",
+                         "type":"string",
+                         "value":"player"
+                        }],
+                 "rotation":0,
+                 "type":"NPC",
+                 "visible":true,
+                 "width":16,
+                 "x":336,
+                 "y":272
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -189,7 +212,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":5,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

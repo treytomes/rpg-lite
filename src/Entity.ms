@@ -37,13 +37,54 @@ Entity.moveTo = function(pnt)
     self.targetPosition = pnt
 end function
 
-Entity.moveBy = function(delta) //, relativeTo)
-    // self.moveTo math.Point.make(self.sprite).add(delta)
-    self.targetPosition = math.Point.make(self.sprite).add(delta)
+Entity.moveBy = function(level, delta)
+    if self.isMoving then
+        return false
+    end if
+    targetPosition = math.Point.make(self.sprite).add(delta)
+
+    targetTileX = targetPosition.x + TILEDISPLAY_CENTER_X
+    targetTileX = targetTileX / TILE_SIZE_PIXELS - 0.5
+
+    targetTileY = targetPosition.y + TILEDISPLAY_CENTER_Y
+    targetTileY = targetTileY / TILE_SIZE_PIXELS - 0.5
+    targetTileY = TILE_LEVEL_SIZE - targetTileY - 1
+
+    if level.isBlocked(targetTileX, targetTileY) then
+        return false
+    end if
+    self.targetPosition = targetPosition
+    return true
 end function
 
 Entity.isMoving = function()
     return not math.Point.make(self.sprite).equals(self.targetPosition)
+end function
+
+Entity.tileX = function()
+    x = self.sprite.x + TILEDISPLAY_CENTER_X
+    x = x / TILE_SIZE_PIXELS - 0.5
+    return x
+end function
+
+Entity.tileY = function()
+    y = self.sprite.y + TILEDISPLAY_CENTER_Y
+    y = y / TILE_SIZE_PIXELS - 0.5
+    y = TILE_LEVEL_SIZE - y - 1
+    return y
+end function
+
+Entity.targetTileX = function()
+    x = self.targetPosition.x + TILEDISPLAY_CENTER_X
+    x = x / TILE_SIZE_PIXELS - 0.5
+    return x
+end function
+
+Entity.targetTileY = function
+    y = self.targetPosition.y + TILEDISPLAY_CENTER_Y
+    y = y / TILE_SIZE_PIXELS - 0.5
+    y = TILE_LEVEL_SIZE - y - 1
+    return y
 end function
 
 // deltaTime is in seconds.
