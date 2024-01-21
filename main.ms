@@ -1,23 +1,3 @@
-RPGLiteTiledLevel = new TiledLevel
-RPGLiteTiledLevel.COLLISION_LAYER_NAME = "collision"
-RPGLiteTiledLevel.entities = []
-
-RPGLiteTiledLevel.collisionLayer = function()
-    return self.getByName(self.COLLISION_LAYER_NAME)
-end function
-
-RPGLiteTiledLevel.isBlocked = function(x, y)
-    collisionLayer = self.collisionLayer
-    tileIndex = collisionLayer.getTileIndex(x, y)
-    isBlocked = collisionLayer.data[tileIndex] != 0
-    if isBlocked then return true
-
-    for entity in self.entities
-        if entity.targetTileX == x and entity.targetTileY == y then return true
-    end for
-    return false
-end function
-
 tlevel = RPGLiteTiledLevel.load("assets/maps/Town_v3.tmj", "assets/tilesets")
 qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([tlevel.error]))
 
@@ -60,6 +40,11 @@ npc1 = Entity.make(tlevel, "NPC1")
 tlevel.entities.push player
 tlevel.entities.push npc0
 tlevel.entities.push npc1
+
+backgroundMusicPath = tlevel.properties["Background Music"]
+bgm = file.loadSound(backgroundMusicPath)
+bgm.loop = true
+bgm.play Settings.Sound["Music Volume"]
 
 while not isDone
 // print "Is moving: " + player.isMoving
@@ -130,4 +115,5 @@ while not isDone
     yield
 end while
 
+bgm.stop
 run "cleanup"

@@ -17,6 +17,12 @@ globals.Key = {
     "EXIT": 27,
 }
 
+globals.Settings = {
+    "Sound": {
+        "Music Volume": 0.5,
+    },
+}
+
 globals.PIXEL_WIDTH = 960
 globals.PIXEL_HEIGHT = 640
 

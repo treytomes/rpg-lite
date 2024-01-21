@@ -34,6 +34,7 @@ globals.SpriteSheet = require("SpriteSheet")
 
 globals.Sprites = require("Sprites")
 globals.Entity = require("Entity")
+globals.RPGLiteTiledLevel = require("RPGLiteTiledLevel")
 
 //
 // Setup our displays.
