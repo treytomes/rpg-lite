@@ -1,5 +1,7 @@
-tlevel = RPGLiteTiledLevel.load("assets/maps/Town_v3.tmj", "assets/tilesets")
-qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([tlevel.error]))
+LEVEL_NAME = "Town_v3"
+
+tlevel = RPGLiteTiledLevel.load("assets/maps/{0}.tmj".fill([ LEVEL_NAME ]), "assets/tilesets")
+qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([ tlevel.error ]))
 
 lastAnimationTime = time
 isDone = false
@@ -26,16 +28,19 @@ tlevel.render
 
 lastAnimationTime = 0
 
+// TODO: Research EventSprite@"/sys/demo/events".
+npc0 = Entity.make(tlevel, "NPC0")
+npc0.script = require("scripts/{0}/{1}".fill([ LEVEL_NAME, "NPC0" ]))
+
+npc1 = Entity.make(tlevel, "NPC1")
+npc1.script = require("scripts/{0}/{1}".fill([ LEVEL_NAME, "NPC1" ]))
+
 player = Entity.make(tlevel, "Player")
 
 tlevel.scrollTo player.sprite.x, player.sprite.y
 // NOTE: The SpriteDisplay is scrollable too!
 display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
 display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
-
-// TODO: Research EventSprite@"/sys/demo/events".
-npc0 = Entity.make(tlevel, "NPC0")
-npc1 = Entity.make(tlevel, "NPC1")
 
 tlevel.entities.push player
 tlevel.entities.push npc0
@@ -54,11 +59,21 @@ while not isDone
     deltaTime = time - lastFrameTime
     lastFrameTime = time
 
-    if key.available then
-        k = key.get
-        // print "k: {0} {1}".fill([k, code(k)])
-        k = code(k)
-        if k == Key.EXIT then isDone = true
+    isDone = Settings.Input.Exit.filtered(@key.pressed)
+
+    isTalking = Settings.Input.Talk.filtered(@key.pressed).len > 0
+    if isTalking then
+        talkingToEntity = tlevel.closestEntity(player)
+        if talkingToEntity != null then
+            distance = talkingToEntity.targetPosition.distance(player.targetPosition)
+            if distance <= TILE_SIZE_PIXELS then
+                if talkingToEntity.script != null then
+                    if talkingToEntity.script.indexes.indexOf("onTalk") != null then
+                        talkingToEntity.script.onTalk player
+                    end if
+                end if
+            end if
+        end if
     end if
 
     if not player.isMoving then
@@ -84,9 +99,10 @@ while not isDone
     // print "deltaTime: {0}".fill([deltaTime])
     spriteControllers.updateSprites deltaTime
     shouldCameraMove = player.isMoving
-    player.update deltaTime
-    npc0.update deltaTime
-    npc1.update deltaTime
+
+    for entity in tlevel.entities
+        entity.update deltaTime
+    end for
 
     // if shouldCameraMove and not player.isMoving then
     //     isBlocked = tlevel.isBlocked(player.targetTileX, player.targetTileY)

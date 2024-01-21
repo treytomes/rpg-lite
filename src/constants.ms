@@ -9,17 +9,21 @@ globals.DisplayType = {
     "SOLID": 7, // pre-defined
 }
 
-globals.Key = {
-    "UP": 19,
-    "DOWN": 20,
-    "LEFT": 17,
-    "RIGHT": 18,
-    "EXIT": 27,
-}
+// globals.Key = {
+//     "UP": 19,
+//     "DOWN": 20,
+//     "LEFT": 17,
+//     "RIGHT": 18,
+//     "EXIT": 27,
+// }
 
 globals.Settings = {
     "Sound": {
         "Music Volume": 0.5,
+    },
+    "Input": {
+        "Talk": [ "enter", "return", "space" ],
+        "Exit": [ "escape" ],
     },
 }
 
@@ -30,6 +34,7 @@ globals.TILE_SIZE = 16
 globals.RENDER_SCALE = 4
 globals.TILE_SIZE_PIXELS = TILE_SIZE * RENDER_SCALE
 globals.TILE_LEVEL_SIZE = 32
+globals.TILE_LEVEL_SIZE_PIXELS = TILE_LEVEL_SIZE * TILE_SIZE_PIXELS
 
 // TODO: These need to get pulled from the image.
 globals.SPRITESHEET_WIDTH = 128

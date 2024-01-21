@@ -1,5 +1,9 @@
-Entity = {}
-Entity.init = function(spritesetName, index)
+Entity = {
+    "script": null,
+}
+
+Entity.init = function(spritesetName, index, name)
+    self.name = name
     self.animation = spriteControllers.newAnimation([
         Sprites[spritesetName][0].get(index),
         Sprites[spritesetName][1].get(index),
@@ -23,7 +27,7 @@ Entity.make = function(level, name)
     index = entity["Sprite Index"]
 
     e = new Entity
-    e.init spritesheetName, index
+    e.init spritesheetName, index, name
 
     e.moveTo math.transformTiledObject(entity)
 
