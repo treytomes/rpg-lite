@@ -19,6 +19,7 @@ jobs:
         lib
         scripts
         src
+        LICENSE
         main.ms
       boot_opts_path: bootOpts.grfon
       custom_executable_name: rpg-lite.exe
