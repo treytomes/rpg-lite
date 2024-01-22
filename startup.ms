@@ -4,3 +4,7 @@ if file.exists(UTILITY_PATH) then
 end if
 
 print "Ready!"
+
+path = "init"
+load path
+run
