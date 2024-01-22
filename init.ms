@@ -23,8 +23,8 @@ end function
 env.addImportPath "./lib/minimicro-tiled"
 env.addImportPath "./src"
 
-import "lib/tiled/tiled"
-globals.Tiled = locals["lib/tiled/tiled"]
+// import "lib/tiled/tiled"
+// globals.Tiled = locals["lib/tiled/tiled"]
 
 import "lib/tiled/TiledLevel"
 globals.TiledLevel = locals["lib/tiled/TiledLevel"]
