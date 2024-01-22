@@ -19,6 +19,7 @@ jobs:
         lib
         scripts
         src
+        cleanup.ms
         LICENSE
         main.ms
       boot_opts_path: bootOpts.grfon
