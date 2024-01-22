@@ -1,0 +1,27 @@
+# Choose the name you want
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+  # Leave if you want to trigger builds manually
+  workflow_dispatch:
+
+jobs:
+
+  publish:
+    uses: sebnozzi/minimicro-actions/.github/workflows/itch-deploy.yaml@main
+    with:
+      minidisk_main_file: init.ms
+      # minidisk_additional_entries: >-
+      #   morning-mood-autumn.jpg
+      #   window_1280.png
+      #   fogmask.png
+      boot_opts_path: bootOpts.grfon
+      custom_executable_name: rpg-lite
+      itch_io_username: treytomes
+      itch_io_game_id: rpg-lite
+      itchio_web_channel: html5
+    secrets:
+      itch_io_api_key: ${{ secrets.ITCH_IO_API_KEY }}
