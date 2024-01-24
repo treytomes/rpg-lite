@@ -15,6 +15,7 @@ I'm not seeing any tiles designed to be drawn over the sprites, which is just as
 
 # References
 
+- [Itch.io Release](https://treytomes.itch.io/rpg-lite)
 - [Git](https://github.com/treytomes/rpg-lite)
 - [MiniScript](https://miniscript.org/)
 - [Mini Micro](https://miniscript.org/MiniMicro/)
