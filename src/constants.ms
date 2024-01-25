@@ -1,6 +1,7 @@
 globals.DisplayType = {
     "QA": 0, // pre-defined
     "UI": 1,
+    "UI_PIXEL": 2,
     "TEXT": 3,
     // "TILE_OVER": 4,
     "SPRITE": 4, // pre-defined
@@ -22,13 +23,13 @@ globals.Settings = {
         "Music Volume": 0.5,
     },
     "Input": {
-        "Talk": [ "enter", "return", "space" ],
         "Exit": [ "escape" ],
+        "Talk": [ "enter", "return", "space" ],
     },
 }
 
-globals.PIXEL_WIDTH = 960
-globals.PIXEL_HEIGHT = 640
+globals.PIXEL_DISPLAY_WIDTH = 960
+globals.PIXEL_DISPLAY_HEIGHT = 640
 
 globals.TILE_SIZE = 16
 globals.RENDER_SCALE = 4
@@ -42,8 +43,16 @@ globals.SPRITESHEET_HEIGHT = 240
 
 globals.ANIMATION_SPEED = 0.300 // seconds
 
-globals.TILEDISPLAY_WIDTH = PIXEL_WIDTH / TILE_SIZE / RENDER_SCALE
-globals.TILEDISPLAY_HEIGHT = PIXEL_HEIGHT / TILE_SIZE / RENDER_SCALE
+globals.TILEDISPLAY_WIDTH = PIXEL_DISPLAY_WIDTH / TILE_SIZE / RENDER_SCALE
+globals.TILEDISPLAY_HEIGHT = PIXEL_DISPLAY_HEIGHT / TILE_SIZE / RENDER_SCALE
 
 globals.TILEDISPLAY_CENTER_X = floor(TILEDISPLAY_WIDTH / 2) * TILE_SIZE * RENDER_SCALE
 globals.TILEDISPLAY_CENTER_Y = floor(TILEDISPLAY_HEIGHT / 2) * TILE_SIZE * RENDER_SCALE
+
+//
+// GUI Constants
+//
+
+globals.TEXT_RENDER_SPEED = 0.05
+globals.WINDOW_WIDTH = PIXEL_DISPLAY_WIDTH - 5 * 2
+globals.WINDOW_HEIGHT = PIXEL_DISPLAY_HEIGHT / 4

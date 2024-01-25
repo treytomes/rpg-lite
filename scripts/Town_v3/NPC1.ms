@@ -1,3 +1,3 @@
 onTalk = function(player)
-    print "How about that weather?"
+    beginConversation "NPC1", "How about that weather?"
 end function

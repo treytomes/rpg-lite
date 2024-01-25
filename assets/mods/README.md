@@ -1,0 +1,1 @@
+Unless otherwise specified, all MODs found here have been released through modarchive.org under the [Mod Archive Distribution license](https://modarchive.org/index.php?terms-upload).

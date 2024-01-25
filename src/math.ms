@@ -11,5 +11,17 @@ transformTiledObject = function(obj)
         add(Point.make(TILE_SIZE_PIXELS, TILE_SIZE_PIXELS).multiply(0.5))
 end function
 
+// text: The string to measure.
+// font: The font reference from the bmfFonts library.
+measureString = function(txt, font)
+    w = 0
+    h = 0
+    for ch in txt
+        w += font.chars[ch].width
+        if font.chars[ch].height > h then h = font.chars[ch].height
+    end for
+    return { "w": w, "h": h }
+end function
+
 Point = require("math/Point")
 Rectangle = require("math/Rectangle")

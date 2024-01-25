@@ -51,85 +51,16 @@ tlevel.entities.push player
 tlevel.entities.push npc0
 tlevel.entities.push npc1
 
-while not isDone
-// print "Is moving: " + player.isMoving
-// print "Position: " + math.Point.make(player.sprite).str
-// print "Target: " + player.targetPosition.str
 
-    deltaTime = time - lastFrameTime
-    lastFrameTime = time
+//
+// Bind all the event handlers.
+//
 
-    isDone = Settings.Input.Exit.filtered(@key.pressed)
+ensureImport("onExit")
+ensureImport("onTalk")
+ensureImport("onUpdate")
 
-    isTalking = Settings.Input.Talk.filtered(@key.pressed).len > 0
-    if isTalking then
-        talkingToEntity = tlevel.closestEntity(player)
-        if talkingToEntity != null then
-            distance = talkingToEntity.targetPosition.distance(player.targetPosition)
-            if distance <= TILE_SIZE_PIXELS then
-                if talkingToEntity.script != null then
-                    if talkingToEntity.script.indexes.indexOf("onTalk") != null then
-                        talkingToEntity.script.onTalk player
-                    end if
-                end if
-            end if
-        end if
-    end if
-
-    if not player.isMoving then
-        // print "I'm not moving!"
-        deltaX = key.axis("Horizontal") * player.speed
-        deltaY = key.axis("Vertical") * player.speed
-
-        if deltaY < 0 then // moving down
-            player.moveBy tlevel, math.Point.unitY.negate.multiply(TILE_SIZE_PIXELS)
-        else if deltaY > 0 then // moving up
-            player.moveBy tlevel, math.Point.unitY.multiply(TILE_SIZE_PIXELS)
-        else if deltaX < 0 then // moving left
-            player.moveBy tlevel, math.Point.unitX.negate.multiply(TILE_SIZE_PIXELS)
-        else if deltaX > 0 then // moving right
-            player.moveBy tlevel, math.Point.unitX.multiply(TILE_SIZE_PIXELS)
-        end if
-    end if
-
-    // Move the npc a little spastically.
-    // npcData.x += rnd
-    // npcData.y += rnd
-
-    // print "deltaTime: {0}".fill([deltaTime])
-    spriteControllers.updateSprites deltaTime
-    shouldCameraMove = player.isMoving
-
-    for entity in tlevel.entities
-        entity.update deltaTime
-    end for
-
-    // if shouldCameraMove and not player.isMoving then
-    //     isBlocked = tlevel.isBlocked(player.targetTileX, player.targetTileY)
-    //     print "Position: {0}, blocked: {1}".fill([ math.Point.make(x, y).str, isBlocked ]) 
-    // end if
-
-    // Only if player movement occurred.
-    if shouldCameraMove then
-        // Scroll the displays to remain centered on the player.
-        tlevel.scrollTo(player.sprite.x, player.sprite.y)
-        display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
-        display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
-    end if
-
-    if time - lastAnimationTime >= ANIMATION_SPEED then
-        // Time to animate the map.
-
-        // This will flip-flop between the 2 deco tilesets.
-        tiles_deco_active = (tiles_deco_active + 1) % tiles_deco.len
-        tlevel.layers[1].display.tileSet = tiles_deco[tiles_deco_active]
-    
-        // Reset the animation timer.
-        lastAnimationTime = time
-    end if
-
-    yield
-end while
+events.eventLoop.run
 
 bgm.stop
 run "cleanup"

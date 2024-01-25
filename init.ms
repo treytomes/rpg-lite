@@ -6,11 +6,15 @@
 //
 
 import "importUtil"
-import "listUtil"
-import "mapUtil"
-import "qa"
-import "spriteControllers"
-import "stringUtil"
+ensureImport "bmfFonts"
+ensureImport "events"
+ensureImport "gui"
+ensureImport "listUtil"
+ensureImport "mapUtil"
+ensureImport "mathUtil"
+ensureImport "qa"
+ensureImport "spriteControllers"
+ensureImport "stringUtil"
 
 // Note how system-defined symbols can be extended.
 env.addImportPath = function(path)
@@ -22,9 +26,6 @@ end function
 
 env.addImportPath "./lib/minimicro-tiled"
 env.addImportPath "./src"
-
-// import "lib/tiled/tiled"
-// globals.Tiled = locals["lib/tiled/tiled"]
 
 import "lib/tiled/TiledLevel"
 globals.TiledLevel = locals["lib/tiled/TiledLevel"]
@@ -42,6 +43,28 @@ globals.RPGLiteTiledLevel = require("RPGLiteTiledLevel")
 // Setup our displays.
 //
 
+setupGUIDisplays = function
+	gui.backgroundDisp = display(DisplayType.SOLID)
+
+	display(DisplayType.UI).mode = displayMode.sprite
+	gui.spriteDisp = display(DisplayType.UI)
+	gui.spriteDisp.clear
+	events.spriteDisplay = gui.spriteDisp
+	
+	display(DisplayType.TEXT).mode = displayMode.text
+	gui.text = display(DisplayType.TEXT)
+	gui.text.color = color.blue
+
+	display(DisplayType.UI_PIXEL).mode = displayMode.pixel
+	gui.menuDisp = display(DisplayType.UI_PIXEL)
+	gui.menuDisp.clear color.clear, 960+16, 640+16
+	gui.menuDisp.scrollX = 8
+    gui.menuDisp.scrollY = 7
+
+    gui.scratchDisp = new PixelDisplay
+    gui.scratchDisp.clear color.red
+end function
+
 text.clear
 gfx.clear
 
@@ -51,19 +74,25 @@ display(DisplayType.UI).mode = displayMode.off
 (new TileDisplay).install DisplayType.TILE_BASE
 
 display(DisplayType.SOLID).mode = displayMode.solidColor
-display(DisplayType.SOLID).color = color.blue
+display(DisplayType.SOLID).color = "#7EBDC5FF"
 
 display(DisplayType.SPRITE).mode = displayMode.sprite
 disp = display(DisplayType.SPRITE)
 disp.clear
+
+setupGUIDisplays
 
 ResetValues = {
     "textColor": text.color,
     // "textBackColor": text.backColor,
 }
 
-text.color = color.red
-// text.backColor = "#00000088"
+Sounds = {
+    "click": (new Sound).init(0.005, noteFreq(60), [1, 0.3, 0], Sound.sineWave),
+}
 
+text.color = color.red
+
+ConversationUI = require("ConversationUI")
 
 run "main"
