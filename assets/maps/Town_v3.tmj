@@ -218,7 +218,7 @@
         {
          "name":"Background Music",
          "type":"string",
-         "value":"assets\/music\/Cute Studio\/M01.ogg"
+         "value":"M01"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

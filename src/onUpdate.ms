@@ -1,4 +1,6 @@
 events.eventLoop.onUpdate = function
+    playlist.update
+
     globals.deltaTime = time - lastFrameTime
     globals.lastFrameTime = time
 

@@ -56,3 +56,11 @@ globals.TILEDISPLAY_CENTER_Y = floor(TILEDISPLAY_HEIGHT / 2) * TILE_SIZE * RENDE
 globals.TEXT_RENDER_SPEED = 0.05
 globals.WINDOW_WIDTH = PIXEL_DISPLAY_WIDTH - 5 * 2
 globals.WINDOW_HEIGHT = PIXEL_DISPLAY_HEIGHT / 4
+
+//
+// Music Constants
+//
+
+globals.MUSIC_ROOT_PATH = "assets/music/Cute Studio/"
+globals.MUSIC_EXT = ".ogg"
+globals.MUSIC_INTRO_CHUNK_NAME = "_intro"

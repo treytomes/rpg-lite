@@ -39,6 +39,9 @@ globals.Sprites = require("Sprites")
 globals.Entity = require("Entity")
 globals.RPGLiteTiledLevel = require("RPGLiteTiledLevel")
 
+globals.PlaylistEntry = require("PlaylistEntry")
+globals.Playlist = require("Playlist")
+
 //
 // Setup our displays.
 //
@@ -81,11 +84,6 @@ disp = display(DisplayType.SPRITE)
 disp.clear
 
 setupGUIDisplays
-
-ResetValues = {
-    "textColor": text.color,
-    // "textBackColor": text.backColor,
-}
 
 Sounds = {
     "click": (new Sound).init(0.005, noteFreq(60), [1, 0.3, 0], Sound.sineWave),

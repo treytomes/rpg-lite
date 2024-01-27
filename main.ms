@@ -3,10 +3,14 @@ LEVEL_NAME = "Town_v3"
 tlevel = RPGLiteTiledLevel.load("assets/maps/{0}.tmj".fill([ LEVEL_NAME ]), "assets/tilesets")
 qa.assert(not tlevel.error, "Error loading tiled level: {0}".fill([ tlevel.error ]))
 
-backgroundMusicPath = tlevel.properties["Background Music"]
-bgm = file.loadSound(backgroundMusicPath)
-bgm.loop = true
-bgm.play Settings.Sound["Music Volume"]
+backgroundMusicName = tlevel.properties["Background Music"]
+
+introPath = MUSIC_ROOT_PATH + backgroundMusicName + MUSIC_INTRO_CHUNK_NAME + MUSIC_EXT
+loopPath = MUSIC_ROOT_PATH + backgroundMusicName + MUSIC_EXT
+
+playlist = Playlist.make
+playlist.push introPath
+playlist.push loopPath, true
 
 lastAnimationTime = time
 isDone = false
@@ -62,5 +66,5 @@ ensureImport("onUpdate")
 
 events.eventLoop.run
 
-bgm.stop
+playlist.stop
 run "cleanup"

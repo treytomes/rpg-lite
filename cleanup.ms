@@ -8,8 +8,7 @@ display(DisplayType.SPRITE).clear
 display(DisplayType.SOLID).color = color.black
 display(DisplayType.UI).clear
 display(DisplayType.UI_PIXEL).clear
-
-text.color = ResetValues.textColor
-// text.backColor = ResetValues.textBackColor
+text.color = color.orange
 
 print "Goodbye!"
+reset
