@@ -1,4 +1,12 @@
 events.eventLoop.onUpdate = function
+    text.color = "#FFFFFF"
+    // text.backColor = "#00000088"
+    text.row = 11
+    text.column = 1
+    print math.Point.make(player.sprite).str
+    text.row = 10
+    text.column = 1
+    print math.Point.make(player.tileX, player.tileY).str
     playlist.update
 
     globals.deltaTime = time - lastFrameTime
@@ -10,9 +18,40 @@ events.eventLoop.onUpdate = function
         deltaY = key.axis("Vertical") * player.speed
 
         if deltaY < 0 then // moving down
-            player.moveBy tlevel, math.Point.unitY.negate.multiply(TILE_SIZE_PIXELS)
+            if player.tileY == TILE_LEVEL_SIZE - 1 then
+                if currentLevelName == "Field" then
+                    newPosition = math.Point.make(player.sprite.x, TILE_LEVEL_SIZE_PIXELS - TILEDISPLAY_CENTER_Y - TILE_SIZE_PIXELS / 2)
+                    
+                    loadLevel("Town_v3")
+
+                    player.moveTo newPosition
+
+                    // Scroll the displays to remain centered on the player.
+                    tlevel.scrollTo(player.sprite.x, player.sprite.y)
+                    display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
+                    display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+                end if
+            else
+                player.moveBy tlevel, math.Point.unitY.negate.multiply(TILE_SIZE_PIXELS)
+            end if
         else if deltaY > 0 then // moving up
-            player.moveBy tlevel, math.Point.unitY.multiply(TILE_SIZE_PIXELS)
+            if player.tileY == 0 then
+                // Load the next map.
+                if currentLevelName == "Town_v3" then
+                    newPosition = math.Point.make(player.sprite.x, 0 - TILEDISPLAY_CENTER_Y + TILE_SIZE_PIXELS / 2)
+                    
+                    loadLevel("Field")
+
+                    player.moveTo newPosition
+
+                    // Scroll the displays to remain centered on the player.
+                    tlevel.scrollTo(player.sprite.x, player.sprite.y)
+                    display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
+                    display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+                end if
+            else
+                player.moveBy tlevel, math.Point.unitY.multiply(TILE_SIZE_PIXELS)
+            end if
         else if deltaX < 0 then // moving left
             player.moveBy tlevel, math.Point.unitX.negate.multiply(TILE_SIZE_PIXELS)
         else if deltaX > 0 then // moving right
