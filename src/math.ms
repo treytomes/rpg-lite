@@ -23,5 +23,11 @@ measureString = function(txt, font)
     return { "w": w, "h": h }
 end function
 
+clamp = function(value, exclusiveMin, exclusiveMax)
+    if value < exclusiveMin then return exclusiveMin
+    if value > exclusiveMax then return exclusiveMax
+    return value
+end function
+
 Point = require("math/Point")
 Rectangle = require("math/Rectangle")

@@ -1,3 +1,31 @@
+
+
+// Scroll the displays to remain centered on the player.
+updateCamera = function(pnt, forceUpdate = false)
+    minX = 0
+    maxX = TILE_LEVEL_SIZE_PIXELS - gfx.width
+    minY = 0
+    maxY = TILE_LEVEL_SIZE_PIXELS - gfx.height
+
+    if forceUpdate then
+        scrollX = math.clamp(pnt.x, 0, maxX)
+        scrollY = math.clamp(pnt.y, 0, maxY)
+        tlevel.scrollTo(scrollX, scrollY)
+        display(DisplayType.SPRITE).scrollX = scrollX - TILEDISPLAY_CENTER_X
+        display(DisplayType.SPRITE).scrollY = scrollY - TILEDISPLAY_CENTER_Y
+    else
+        if minX < pnt.x and pnt.x < maxX then
+            tlevel.scrollTo(pnt.x, tlevel.scrollY)
+            display(DisplayType.SPRITE).scrollX = pnt.x - TILEDISPLAY_CENTER_X
+        end if
+
+        if minY < pnt.y and pnt.y < maxY then
+            tlevel.scrollTo(tlevel.scrollX, pnt.y)
+            display(DisplayType.SPRITE).scrollY = pnt.y - TILEDISPLAY_CENTER_Y
+        end if
+    end if
+end function
+
 events.eventLoop.onUpdate = function
     text.color = "#FFFFFF"
     // text.backColor = "#00000088"
@@ -25,11 +53,7 @@ events.eventLoop.onUpdate = function
                     loadLevel("Town_v3")
 
                     player.moveTo newPosition
-
-                    // Scroll the displays to remain centered on the player.
-                    tlevel.scrollTo(player.sprite.x, player.sprite.y)
-                    display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
-                    display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+                    updateCamera player.sprite, true
                 end if
             else
                 player.moveBy tlevel, math.Point.unitY.negate.multiply(TILE_SIZE_PIXELS)
@@ -43,11 +67,7 @@ events.eventLoop.onUpdate = function
                     loadLevel("Field")
 
                     player.moveTo newPosition
-
-                    // Scroll the displays to remain centered on the player.
-                    tlevel.scrollTo(player.sprite.x, player.sprite.y)
-                    display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
-                    display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+                    updateCamera player.sprite, true
                 end if
             else
                 player.moveBy tlevel, math.Point.unitY.multiply(TILE_SIZE_PIXELS)
@@ -73,10 +93,7 @@ events.eventLoop.onUpdate = function
 
     // Only if player movement occurred.
     if shouldCameraMove then
-        // Scroll the displays to remain centered on the player.
-        tlevel.scrollTo(player.sprite.x, player.sprite.y)
-        display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
-        display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+        updateCamera player.sprite
     end if
 
     if time - lastAnimationTime >= ANIMATION_SPEED then
