@@ -1,40 +1,11 @@
-
-
-// Scroll the displays to remain centered on the player.
-updateCamera = function(pnt, forceUpdate = false)
-    minX = 0
-    maxX = TILE_LEVEL_SIZE_PIXELS - gfx.width
-    minY = 0
-    maxY = TILE_LEVEL_SIZE_PIXELS - gfx.height
-
-    if forceUpdate then
-        scrollX = math.clamp(pnt.x, 0, maxX)
-        scrollY = math.clamp(pnt.y, 0, maxY)
-        tlevel.scrollTo(scrollX, scrollY)
-        display(DisplayType.SPRITE).scrollX = scrollX - TILEDISPLAY_CENTER_X
-        display(DisplayType.SPRITE).scrollY = scrollY - TILEDISPLAY_CENTER_Y
-    else
-        if minX < pnt.x and pnt.x < maxX then
-            tlevel.scrollTo(pnt.x, tlevel.scrollY)
-            display(DisplayType.SPRITE).scrollX = pnt.x - TILEDISPLAY_CENTER_X
-        end if
-
-        if minY < pnt.y and pnt.y < maxY then
-            tlevel.scrollTo(tlevel.scrollX, pnt.y)
-            display(DisplayType.SPRITE).scrollY = pnt.y - TILEDISPLAY_CENTER_Y
-        end if
-    end if
-end function
-
 events.eventLoop.onUpdate = function
-    text.color = "#FFFFFF"
-    // text.backColor = "#00000088"
-    text.row = 11
-    text.column = 1
-    print math.Point.make(player.sprite).str
-    text.row = 10
-    text.column = 1
-    print math.Point.make(player.tileX, player.tileY).str
+    // text.color = "#FFFFFF"
+    // text.row = 11
+    // text.column = 1
+    // print math.Point.make(player.sprite).str
+    // text.row = 10
+    // text.column = 1
+    // print math.Point.make(player.tileX, player.tileY).str
     playlist.update
 
     globals.deltaTime = time - lastFrameTime
@@ -48,12 +19,16 @@ events.eventLoop.onUpdate = function
         if deltaY < 0 then // moving down
             if player.tileY == TILE_LEVEL_SIZE - 1 then
                 if currentLevelName == "Field" then
+                    FadeController.fadeOut
+
                     newPosition = math.Point.make(player.sprite.x, TILE_LEVEL_SIZE_PIXELS - TILEDISPLAY_CENTER_Y - TILE_SIZE_PIXELS / 2)
                     
                     loadLevel("Town_v3")
 
                     player.moveTo newPosition
-                    updateCamera player.sprite, true
+                    camera.reset
+
+                    FadeController.fadeIn
                 end if
             else
                 player.moveBy tlevel, math.Point.unitY.negate.multiply(TILE_SIZE_PIXELS)
@@ -62,12 +37,16 @@ events.eventLoop.onUpdate = function
             if player.tileY == 0 then
                 // Load the next map.
                 if currentLevelName == "Town_v3" then
+                    FadeController.fadeOut
+
                     newPosition = math.Point.make(player.sprite.x, 0 - TILEDISPLAY_CENTER_Y + TILE_SIZE_PIXELS / 2)
                     
                     loadLevel("Field")
 
                     player.moveTo newPosition
-                    updateCamera player.sprite, true
+                    camera.reset
+
+                    FadeController.fadeIn
                 end if
             else
                 player.moveBy tlevel, math.Point.unitY.multiply(TILE_SIZE_PIXELS)
@@ -93,7 +72,7 @@ events.eventLoop.onUpdate = function
 
     // Only if player movement occurred.
     if shouldCameraMove then
-        updateCamera player.sprite
+        camera.update
     end if
 
     if time - lastAnimationTime >= ANIMATION_SPEED then

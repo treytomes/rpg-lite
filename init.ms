@@ -41,6 +41,8 @@ globals.RPGLiteTiledLevel = require("RPGLiteTiledLevel")
 
 globals.PlaylistEntry = require("PlaylistEntry")
 globals.Playlist = require("Playlist")
+globals.Camera = require("Camera")
+globals.FadeController = require("FadeController")
 
 //
 // Setup our displays.

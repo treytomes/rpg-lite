@@ -77,21 +77,21 @@ loadLevel = function(levelName)
         tlevel.entities.push player
     end if
 
-    tlevel.scrollTo player.sprite.x, player.sprite.y
-    // NOTE: The SpriteDisplay is scrollable too!
-    display(DisplayType.SPRITE).scrollX = player.sprite.x - TILEDISPLAY_CENTER_X
-    display(DisplayType.SPRITE).scrollY = player.sprite.y - TILEDISPLAY_CENTER_Y
+    globals.camera = Camera.make(player)
+    camera.reset
 end function
 
-loadLevel("Town_v3")
+FadeController.fadeOut 0
+loadLevel "Town_v3"
+FadeController.fadeIn
 
 //
 // Bind all the event handlers.
 //
 
-ensureImport("onExit")
-ensureImport("onTalk")
-ensureImport("onUpdate")
+ensureImport "onExit"
+ensureImport "onTalk"
+ensureImport "onUpdate"
 
 events.eventLoop.run
 

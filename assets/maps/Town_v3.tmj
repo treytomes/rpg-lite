@@ -113,8 +113,8 @@
                  "type":"Player",
                  "visible":true,
                  "width":16,
-                 "x":256,
-                 "y":256
+                 "x":80,
+                 "y":432
                 }, 
                 {
                  "gid":2095,
