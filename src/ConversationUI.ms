@@ -103,8 +103,4 @@ ConversationUI.draw = function
     end if
 end function
 
-globals.beginConversation = function(name, txt)
-    ConversationUI.beginConversation name, txt
-end function
-
 return ConversationUI

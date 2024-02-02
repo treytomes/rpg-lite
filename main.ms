@@ -21,12 +21,11 @@ loadLevel = function(levelName)
 
     globals.backgroundMusicName = tlevel.properties["Background Music"]
 
-    introPath = MUSIC_ROOT_PATH + backgroundMusicName + MUSIC_INTRO_CHUNK_NAME + MUSIC_EXT
-    loopPath = MUSIC_ROOT_PATH + backgroundMusicName + MUSIC_EXT
-
     // TODO: Clear the playlist on entry to a new map, but only if the backgroundMusicName has changed.
-    playlist.push introPath
-    playlist.push loopPath, true
+    introPath = MUSIC_ROOT_PATH + backgroundMusicName + MUSIC_INTRO_CHUNK_NAME + MUSIC_EXT
+    if file.exists(introPath) then playlist.push introPath
+    loopPath = MUSIC_ROOT_PATH + backgroundMusicName + MUSIC_EXT
+    if file.exists(loopPath) then playlist.push loopPath, true
 
     globals.baseId = tlevel.getByName("base").id
     globals.decoId = tlevel.getByName("decoration").id - baseId
@@ -45,35 +44,55 @@ loadLevel = function(levelName)
     if levelName == "Town_v3" then
         display(DisplayType.SPRITE).clear
 
-        // TODO: Research EventSprite@"/sys/demo/events".
-        globals.npc0 = Entity.make(tlevel, "NPC0")
-        npc0.script = require("scripts/{0}/{1}".fill([ currentLevelName, "NPC0" ]))
+        // TODO: Removing an entity should also remove it's sprite.
+        tlevel.entities = []
 
-        globals.npc1 = Entity.make(tlevel, "NPC1")
-        npc1.script = require("scripts/{0}/{1}".fill([ currentLevelName, "NPC1" ]))
+        // TODO: Research EventSprite@"/sys/demo/events".
+
+        for obj in tlevel.getByName("entities").objects
+            if obj.type == "Player" then continue
+
+            newEntity = Entity.make(tlevel, obj.name)
+            if newEntity.type == "NPC" then
+                newEntity.script = require("scripts/{0}/{1}".fill([ currentLevelName, newEntity.name ]))
+            else if newEntity.type == "Chest" then
+                newEntity.script = require("scripts/Chest")
+            else if newEntity.type == "Door" then
+                newEntity.script = require("scripts/Door")
+            end if
+            newEntity.script.entity = newEntity
+
+            newEntity.script.say = function (text)
+                ConversationUI.beginConversation self.entity.name, text
+            end function
+            newEntity.script.playAnimation = function (animationName)
+                self.entity.sprite.play self.entity.animations[animationName]
+            end function
+            newEntity.script.allowPassage = function (value)
+                self.entity.blocksMovement = not value
+            end function
+
+            tlevel.entities.push newEntity
+            if newEntity.script.hasIndex("onInit") then newEntity.script.onInit
+        end for
 
         if globals.player == null then
             globals.player = Entity.make(tlevel, "Player")
         else
             display(DisplayType.SPRITE).sprites.push player.sprite
         end if
-
-        // TODO: Removing an entity should also remove it's sprite.
-        tlevel.entities = []
-        tlevel.entities.push npc0
-        tlevel.entities.push npc1
         tlevel.entities.push player
     else
         display(DisplayType.SPRITE).clear
 
+        // TODO: Pushing an entity should also push its sprite.
+        tlevel.entities = []
+
         if globals.player == null then
             globals.player = Entity.make(tlevel, "Player")
         else
             display(DisplayType.SPRITE).sprites.push player.sprite
         end if
-
-        // TODO: Pushing an entity should also push its sprite.
-        tlevel.entities = []
         tlevel.entities.push player
     end if
 

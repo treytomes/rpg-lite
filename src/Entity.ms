@@ -2,19 +2,34 @@ Entity = {
     "script": null,
 }
 
-Entity.init = function(spritesetName, index, name)
+Entity.init = function(spritesetName, index, name, type)
     self.name = name
-    self.animation = spriteControllers.newAnimation([
-        Sprites[spritesetName][0].get(index),
-        Sprites[spritesetName][1].get(index),
-    ])
-    self.animation.speed = 0.5
-    self.animationFrame = 0
-    self.speed = 2
+    self.type = type
+
+    self.animations = {
+        "LOOP": spriteControllers.newAnimation([
+            Sprites[spritesetName][0].get(index),
+            Sprites[spritesetName][1].get(index),
+        ]),
+        "FRAME0": spriteControllers.newAnimation([
+            Sprites[spritesetName][0].get(index),
+        ]),
+        "FRAME1": spriteControllers.newAnimation([
+            Sprites[spritesetName][1].get(index),
+        ]),
+    }
+    
+    self.animations.LOOP.speed = 0.5
+    self.animations.FRAME0.speed = 0.5
+    self.animations.FRAME1.speed = 0.5
+    
     self.sprite = new spriteControllers.Animated
     self.sprite.scale = RENDER_SCALE
-    self.sprite.play self.animation
+    self.sprite.play self.animations.LOOP
+
+    self.speed = 2
     self.targetPostion = math.Point.zero
+    self.blocksMovement = true
     display(DisplayType.SPRITE).sprites.push self.sprite
 end function
 
@@ -25,9 +40,10 @@ Entity.make = function(level, name)
 
     spritesheetName = entity["Sprite Sheet"]
     index = entity["Sprite Index"]
+    type = entity["type"]
 
     e = new Entity
-    e.init spritesheetName, index, name
+    e.init spritesheetName, index, name, type
 
     e.moveTo math.transformTiledObject(entity)
 

@@ -13,7 +13,7 @@ RPGLiteTiledLevel.isBlocked = function(x, y)
     if isBlocked then return true
 
     for entity in self.entities
-        if entity.targetTileX == x and entity.targetTileY == y then return true
+        if entity.targetTileX == x and entity.targetTileY == y and entity.blocksMovement then return true
     end for
     return false
 end function

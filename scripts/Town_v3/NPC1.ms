@@ -1,3 +1,3 @@
 onTalk = function(player)
-    beginConversation "NPC1", "How about that weather?"
+    outer.say "How about that weather?"
 end function
