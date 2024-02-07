@@ -14,13 +14,20 @@ end function
 // text: The string to measure.
 // font: The font reference from the bmfFonts library.
 measureString = function(txt, font)
-    w = 0
-    h = 0
-    for ch in txt
-        w += font.chars[ch].width
-        if font.chars[ch].height > h then h = font.chars[ch].height
-    end for
-    return { "w": w, "h": h }
+    // w = 0
+    // h = 0
+    // for ch in txt
+    //     w += font.chars[ch].width
+    //     if font.chars[ch].height > h then h = font.chars[ch].height
+    // end for
+    // return { "w": w, "h": h }
+    if txt == null then
+        return { "w": 0, "h": 0 }
+    end if
+    return {
+        "w": font.chars["X"].width * txt.len,
+        "h": font.chars["X"].height,
+    }
 end function
 
 clamp = function(value, exclusiveMin, exclusiveMax)

@@ -1,5 +1,8 @@
 ConversationUI = {}
 
+gui.largeFont = bmfFonts.Font.load("assets/fonts/SDS_8x8.bmf")
+gui.smallFont = bmfFonts.Font.load("assets/fonts/SDS_6x6.bmf")
+
 // Conversation management variables.
 ConversationUI.conversationWindow = null
 ConversationUI.visibleText = ""
@@ -34,8 +37,12 @@ ConversationUI.renderText = function(txt, blinkMessage = null)
     count = 0
     for line in lines
         for ch in line
-            gui.largeFont.print ch, margin + x, margin + y, 1, color.white
-            x += gui.largeFont.chars[ch].width
+            if ch == " " then
+                x += gui.largeFont.chars["X"].width
+            else
+                gui.largeFont.print ch, margin + x, margin + y, 1, color.white
+                x += gui.largeFont.chars[ch].width
+            end if
         end for
         x = 0
         y += gui.largeFont.chars["X"].height
@@ -45,9 +52,11 @@ ConversationUI.renderText = function(txt, blinkMessage = null)
     end for
 
     // Draw the "Continue" indicator.
-    if blinkMessage != null then
+    if blinkMessage != null and blinkMessage != 0 then
+        // globals.error = [ blinkMessage, gui.smallFont ]
+
         size = math.measureString(blinkMessage, gui.smallFont)
-        gui.smallFont.print blinkMessage, gfx.width - size.w, size.h
+        gui.smallFont.print blinkMessage, gfx.width - size.w - margin, size.h
     end if
 
     self.conversationWindow.setContent gui.scratchDisp.getImage(0, 0, self.conversationWindow.width, self.conversationWindow.height), false
